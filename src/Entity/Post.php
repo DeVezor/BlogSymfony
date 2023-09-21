@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
+ * @ORM\Table(name="post")
  */
 class Post
 {
@@ -33,12 +34,14 @@ class Post
     private $createdAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(name="author", referencedColumnName="id")
      */
     private $author;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Category::class)
+     * @ORM\JoinColumn(name="category", referencedColumnName="id")
      */
     private $category;
 
@@ -85,22 +88,22 @@ class Post
 
     public function getAuthor(): ?string
     {
-        return $this->author;
+        return $this->author ? $this->author->getLogin() : null;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(User $author): self
     {
         $this->author = $author;
-
+    
         return $this;
     }
 
     public function getCategory(): ?string
     {
-        return $this->category;
+        return $this->category ? $this->category->getName() : null;
     }
 
-    public function setCategory(string $category): self
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
 
